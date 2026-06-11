@@ -115,7 +115,6 @@ static void add_system_message(const char *content) {
 static int register_client(const char *name, int *assigned_id) {
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (shared->clients[i].active && strcmp(shared->clients[i].name, name) == 0) {
-            // Клиент с таким именем уже существует
             return -1;
         }
     }
@@ -141,7 +140,6 @@ static void* message_dispatcher(void *arg) {
     while (running) {
         sem_wait(msg_count);
         if (!running) break;
-        // Сообщения уже в разделяемой памяти
     }
     
     return NULL;

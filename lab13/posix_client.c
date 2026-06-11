@@ -14,7 +14,6 @@ int main() {
     mqd_t mq_server, mq_client;
     char buffer[MAX_MSG_SIZE];
 
-    // Открываем очереди
     mq_server = mq_open(SERVER_QUEUE, O_RDWR);
     if (mq_server == -1) {
         perror("mq_open server");
@@ -27,14 +26,12 @@ int main() {
         exit(1);
     }
 
-    // Читаем сообщение от сервера
     if (mq_receive(mq_server, buffer, MAX_MSG_SIZE, NULL) == -1) {
         perror("mq_receive");
         exit(1);
     }
     printf("Client received: %s\n", buffer);
 
-    // Отправляем "Hello!"
     strcpy(buffer, "Hello!");
     if (mq_send(mq_client, buffer, strlen(buffer) + 1, 1) == -1) {
         perror("mq_send");

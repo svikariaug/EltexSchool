@@ -12,7 +12,6 @@
 #define MSG_SIZE 256
 
 int main() {
-    // Создаём разделяемую память
     int shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666);
     if (shm_fd == -1) {
         perror("shm_open");
@@ -26,22 +25,18 @@ int main() {
         exit(1);
     }
 
-    // Семафор для синхронизации
     sem_t *sem = sem_open(SEM_NAME, O_CREAT, 0666, 0);
     if (sem == SEM_FAILED) {
         perror("sem_open");
         exit(1);
     }
 
-    // Записываем "Hi!"
     strcpy(shm_ptr, "Hi!");
     printf("[Server] Sent: %s\n", shm_ptr);
 
-    // Ждём ответа
     sem_wait(sem);
     printf("[Server] Received: %s\n", shm_ptr);
 
-    // Очистка
     munmap(shm_ptr, MSG_SIZE);
     close(shm_fd);
     shm_unlink(SHM_NAME);

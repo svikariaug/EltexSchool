@@ -1,4 +1,3 @@
-// task2.c
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>

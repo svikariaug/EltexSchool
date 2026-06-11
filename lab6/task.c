@@ -38,7 +38,6 @@ void add_abonent() {
     new_node->prev = NULL;
     new_node->next = NULL;
 
-    // Добавление в конец списка
     if (head == NULL) {
         head = new_node;
         tail = new_node;
@@ -80,13 +79,11 @@ void delete_abonent() {
         return;
     }
 
-    // Поиск узла по индексу
     current = head;
     for (int i = 0; i < del_index; i++) {
         current = current->next;
     }
 
-    // Удаление узла
     if (current->prev != NULL) {
         current->prev->next = current->next;
     } else {

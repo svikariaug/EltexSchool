@@ -28,14 +28,12 @@ int main() {
         exit(1);
     }
 
-    // Читаем от сервера
     if (msgrcv(msgid_server, &buf, sizeof(buf.mtext), 1, 0) == -1) {
         perror("msgrcv");
         exit(1);
     }
     printf("Client received: %s\n", buf.mtext);
 
-    // Отправляем "Hello!"
     buf.mtype = 1;
     strcpy(buf.mtext, "Hello!");
     if (msgsnd(msgid_client, &buf, strlen(buf.mtext) + 1, 0) == -1) {

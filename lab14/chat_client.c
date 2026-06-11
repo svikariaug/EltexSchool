@@ -187,14 +187,12 @@ static void* receive_messages(void *arg) {
             int current_tail = shared->msg_tail;
             sem_post(mutex);
             
-            // Читаем все новые сообщения
             while (processed_count < current_count && running) {
                 sem_wait(mutex);
                 int read_pos = (shared->msg_head + processed_count) % MAX_MESSAGES;
                 
                 if (read_pos != current_tail) {
                     Message msg = shared->messages[read_pos];
-                    // Показываем все сообщения
                     add_message(msg.sender_name, msg.content);
                     processed_count++;
                 }
@@ -204,7 +202,7 @@ static void* receive_messages(void *arg) {
             update_user_list();
         }
         
-        usleep(50000); // 50ms для более быстрого обновления
+        usleep(50000);
     }
     
     return NULL;
@@ -214,8 +212,7 @@ static void* send_messages(void *arg) {
     (void)arg;
     char input[MAX_MSG_SIZE];
     int ch, pos = 0;
-    
-    // Ждем регистрации
+
     while (running && !registration_done) {
         usleep(100000);
     }
@@ -320,11 +317,9 @@ int main(void) {
         cleanup();
         exit(1);
     }
-    
-    // Регистрация клиента
+
     sem_wait(mutex);
-    
-    // Проверяем, не зарегистрирован ли уже клиент с таким именем
+
     int already_exists = 0;
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (shared->clients[i].active && strcmp(shared->clients[i].name, my_name) == 0) {
@@ -355,8 +350,7 @@ int main(void) {
         shared->clients[slot].active = 1;
         shared->clients[slot].join_time = time(NULL);
         shared->client_count++;
-        
-        // Обновляем список пользователей
+
         char temp[4096] = "";
         for (int i = 0; i < MAX_CLIENTS; i++) {
             if (shared->clients[i].active) {
@@ -367,8 +361,7 @@ int main(void) {
             }
         }
         strcpy(shared->user_list, temp);
-        
-        // Добавляем сообщение о входе
+
         char join_msg[MAX_MSG_SIZE];
         snprintf(join_msg, sizeof(join_msg), "%s joined the chat", my_name);
         
@@ -392,8 +385,7 @@ int main(void) {
         cleanup();
         exit(1);
     }
-    
-    // Инициализация ncurses
+
     initscr();
     cbreak();
     noecho();
@@ -426,8 +418,7 @@ int main(void) {
     
     msg_lines = 0;
     processed_count = 0;
-    
-    // Приветственные сообщения
+
     add_message("SYSTEM", "Welcome to the chat!");
     add_message("SYSTEM", "You are logged in as:");
     add_message("SYSTEM", my_name);

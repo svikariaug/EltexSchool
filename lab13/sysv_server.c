@@ -17,7 +17,6 @@ int main() {
     int msgid_server, msgid_client;
     struct msgbuf buf;
 
-    // Создаём очереди
     msgid_server = msgget(MSG_KEY_SERVER, IPC_CREAT | 0666);
     if (msgid_server == -1) {
         perror("msgget server");
@@ -30,7 +29,6 @@ int main() {
         exit(1);
     }
 
-    // Отправляем "Hi!"
     buf.mtype = 1;
     strcpy(buf.mtext, "Hi!");
     if (msgsnd(msgid_server, &buf, strlen(buf.mtext) + 1, 0) == -1) {
@@ -39,14 +37,12 @@ int main() {
     }
     printf("Server sent: %s\n", buf.mtext);
 
-    // Ждём ответ
     if (msgrcv(msgid_client, &buf, sizeof(buf.mtext), 1, 0) == -1) {
         perror("msgrcv");
         exit(1);
     }
     printf("Server received: %s\n", buf.mtext);
 
-    // Удаляем очереди
     msgctl(msgid_server, IPC_RMID, NULL);
     msgctl(msgid_client, IPC_RMID, NULL);
 

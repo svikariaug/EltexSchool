@@ -29,10 +29,8 @@ int main() {
         exit(1);
     }
 
-    // Читаем сообщение
     printf("[Client] Received: %s\n", shm_ptr);
 
-    // Отвечаем
     strcpy(shm_ptr, "Hello!");
     printf("[Client] Sent: %s\n", shm_ptr);
 
