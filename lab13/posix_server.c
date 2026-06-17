@@ -17,7 +17,11 @@ int main() {
     mq_unlink(SERVER_QUEUE);
     mq_unlink(CLIENT_QUEUE);
 
-    struct mq_attr attr = {0, 10, MAX_MSG_SIZE, 0};
+    struct mq_attr attr;
+    memset(&attr, 0, sizeof(attr));
+    attr.mq_maxmsg = 10;
+    attr.mq_msgsize = MAX_MSG_SIZE;
+
     mq_server = mq_open(SERVER_QUEUE, O_CREAT | O_RDWR, 0666, &attr);
     if (mq_server == -1) {
         perror("mq_open server");
